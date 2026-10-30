@@ -43,6 +43,13 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
+        // Keep the previous login time for the dashboard, then record this one.
+        // last_login_at is not fillable, so it is set directly.
+        $user = $request->user();
+        $request->session()->put('previous_login_at', $user->last_login_at?->toIso8601String());
+        $user->last_login_at = now();
+        $user->save();
+
         return redirect()->intended(route('dashboard'));
     }
 
