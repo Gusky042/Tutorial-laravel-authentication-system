@@ -31,6 +31,9 @@ class ChangePasswordTest extends TestCase
         $response->assertOk();
         $response->assertViewIs('settings.password');
         $response->assertSee('Current password');
+        $response->assertSee('data-toggle-password="current_password"', false);
+        $response->assertSee('data-toggle-password="password"', false);
+        $response->assertSee('data-toggle-password="password_confirmation"', false);
     }
 
     public function test_password_changes_with_correct_current_password_and_new_password_works(): void

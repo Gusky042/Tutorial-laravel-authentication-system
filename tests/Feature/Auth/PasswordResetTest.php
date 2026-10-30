@@ -85,6 +85,8 @@ class PasswordResetTest extends TestCase
         $response->assertViewIs('auth.reset-password');
         $response->assertSee($token);
         $response->assertSee($user->email);
+        $response->assertSee('data-toggle-password="password"', false);
+        $response->assertSee('data-toggle-password="password_confirmation"', false);
     }
 
     public function test_password_can_be_reset_with_valid_token_and_user_can_log_in(): void

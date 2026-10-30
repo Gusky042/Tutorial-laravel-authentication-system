@@ -17,25 +17,34 @@
 
             <div>
                 <label for="current_password" class="block text-sm font-medium text-gray-700">Current password</label>
-                <input id="current_password" name="current_password" type="password"
-                       required autocomplete="current-password"
-                       class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                <div class="relative mt-1">
+                    <input id="current_password" name="current_password" type="password"
+                           required autocomplete="current-password"
+                           class="block w-full rounded-md border border-gray-300 px-3 py-2 pr-16 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                    <x-password-toggle for="current_password" label="current password" />
+                </div>
                 <x-input-error for="current_password" />
             </div>
 
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700">New password</label>
-                <input id="password" name="password" type="password"
-                       required autocomplete="new-password"
-                       class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                <div class="relative mt-1">
+                    <input id="password" name="password" type="password"
+                           required autocomplete="new-password"
+                           class="block w-full rounded-md border border-gray-300 px-3 py-2 pr-16 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                    <x-password-toggle for="password" label="new password" />
+                </div>
                 <x-input-error for="password" />
             </div>
 
             <div>
                 <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm new password</label>
-                <input id="password_confirmation" name="password_confirmation" type="password"
-                       required autocomplete="new-password"
-                       class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                <div class="relative mt-1">
+                    <input id="password_confirmation" name="password_confirmation" type="password"
+                           required autocomplete="new-password"
+                           class="block w-full rounded-md border border-gray-300 px-3 py-2 pr-16 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                    <x-password-toggle for="password_confirmation" label="confirm new password" />
+                </div>
             </div>
 
             <button type="submit"

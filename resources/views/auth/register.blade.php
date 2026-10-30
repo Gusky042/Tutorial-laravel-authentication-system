@@ -30,12 +30,7 @@
                 <input id="password" name="password" type="password"
                        required autocomplete="new-password"
                        class="block w-full rounded-md border border-gray-300 px-3 py-2 pr-16 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300">
-                {{-- Shown by resources/js/app.js; stays hidden if JavaScript is off. --}}
-                <button type="button" data-toggle-password="password" aria-controls="password"
-                        aria-pressed="false" aria-label="Show password"
-                        class="absolute inset-y-0 right-0 hidden px-3 text-sm font-medium text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400 rounded-r-md">
-                    Show
-                </button>
+                <x-password-toggle for="password" label="password" />
             </div>
             <p class="mt-1 text-xs text-gray-500">
                 At least 8 characters with upper and lower case letters, a number and a symbol.
@@ -49,11 +44,7 @@
                 <input id="password_confirmation" name="password_confirmation" type="password"
                        required autocomplete="new-password" aria-describedby="password-match"
                        class="block w-full rounded-md border border-gray-300 px-3 py-2 pr-16 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300">
-                <button type="button" data-toggle-password="password_confirmation" aria-controls="password_confirmation"
-                        aria-pressed="false" aria-label="Show confirm password"
-                        class="absolute inset-y-0 right-0 hidden px-3 text-sm font-medium text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400 rounded-r-md">
-                    Show
-                </button>
+                <x-password-toggle for="password_confirmation" label="confirm password" />
             </div>
 
             {{-- Live match indicator, driven by resources/js/app.js. The server still checks 'confirmed'. --}}

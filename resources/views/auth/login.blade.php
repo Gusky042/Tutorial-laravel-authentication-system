@@ -18,9 +18,12 @@
 
         <div>
             <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-            <input id="password" name="password" type="password"
-                   required autocomplete="current-password"
-                   class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300">
+            <div class="relative mt-1">
+                <input id="password" name="password" type="password"
+                       required autocomplete="current-password"
+                       class="block w-full rounded-md border border-gray-300 px-3 py-2 pr-16 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                <x-password-toggle for="password" label="password" />
+            </div>
             <x-input-error for="password" />
         </div>
 

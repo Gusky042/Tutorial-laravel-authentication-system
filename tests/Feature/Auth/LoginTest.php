@@ -18,6 +18,7 @@ class LoginTest extends TestCase
         $response->assertOk();
         $response->assertViewIs('auth.login');
         $response->assertSee('Remember me');
+        $response->assertSee('data-toggle-password="password"', false);
     }
 
     public function test_user_can_log_in_with_correct_credentials(): void
