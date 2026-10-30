@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -32,8 +33,16 @@ Route::middleware('guest')->group(function () {
         ->name('password.store');
 });
 
-Route::middleware('auth')->group(function () {
+// 'auth.session' (AuthenticateSession) logs a session out when the user's password
+// hash changes elsewhere. Auth::logoutOtherDevices() relies on it.
+Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+
+    Route::get('/settings/password', [PasswordController::class, 'edit'])
+        ->name('password.edit');
+    Route::put('/settings/password', [PasswordController::class, 'update'])
+        ->middleware('throttle:6,1')
+        ->name('password.update');
 
     // TEMPORARY - replaced in Phase 6
     Route::view('/dashboard', 'dashboard')->name('dashboard');
