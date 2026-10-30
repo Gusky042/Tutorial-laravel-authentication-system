@@ -12,7 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Guests hitting an 'auth' route go to the login page.
+        $middleware->redirectGuestsTo(fn () => route('login'));
+
+        // Logged-in users hitting a 'guest' route (like /login) go to the dashboard.
+        $middleware->redirectUsersTo(fn () => route('dashboard'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

@@ -23,7 +23,8 @@
                        class="{{ request()->routeIs('dashboard') ? 'font-semibold text-gray-900' : 'text-gray-600 hover:text-gray-900' }}">
                         Dashboard
                     </a>
-                    <a href="{{ route('password.edit') }}"
+                    {{-- password.edit is added in Phase 5; until then the link points to '#'. --}}
+                    <a href="{{ Route::has('password.edit') ? route('password.edit') : '#' }}"
                        class="{{ request()->routeIs('password.edit') ? 'font-semibold text-gray-900' : 'text-gray-600 hover:text-gray-900' }}">
                         Change password
                     </a>
