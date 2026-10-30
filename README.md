@@ -1,58 +1,121 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Auth App
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A small Laravel 13 application with hand-written authentication: log in, log out, forgot password (email reset link), reset password, change password, and a protected dashboard.
 
-## About Laravel
+There is **no public registration**. Users are created by an administrator with `php artisan user:create`.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Built with Blade, Tailwind CSS (through Vite) and MySQL. No starter kit (Breeze, Jetstream or Fortify) is used, so every controller, request and view is in this repository.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.3 or newer, with the `pdo_mysql`, `pdo_sqlite`, `mbstring`, `openssl` and `fileinfo` extensions
+- Composer 2
+- Node.js 20.19+ or 22.12+, and npm
+- MySQL 8 (utf8mb4)
 
-## Learning Laravel
+The test suite runs on an in-memory SQLite database (`pdo_sqlite`), so tests never touch MySQL.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Local setup
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. Clone the repository and enter it.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+   ```bash
+   git clone https://github.com/Gusky042/Tutorial-laravel-authentication-system.git
+   cd Tutorial-laravel-authentication-system
+   ```
 
-## Agentic Development
+2. Install PHP and JavaScript dependencies.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+   ```bash
+   composer install
+   npm install
+   ```
+
+3. Create your `.env` file and an application key.
+
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+   On Windows PowerShell use `Copy-Item .env.example .env` instead of `cp`.
+
+4. Create the MySQL database.
+
+   ```sql
+   CREATE DATABASE laravel_auth_app CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   ```
+
+5. Set `DB_USERNAME` and `DB_PASSWORD` in `.env` for your MySQL server. The other `DB_*` values already point to `127.0.0.1:3306` and `laravel_auth_app`.
+
+6. Create the tables and the test user.
+
+   ```bash
+   php artisan migrate
+   php artisan db:seed
+   ```
+
+   The seeder creates **test@example.com / Password123!**. It only runs when `APP_ENV` is `local` or `testing`.
+
+7. Build the front-end assets and start the server.
+
+   ```bash
+   npm run build
+   php artisan serve
+   ```
+
+   Open <http://localhost:8000> and log in with the test user.
+
+### Reading password reset emails locally
+
+`.env.example` sets `MAIL_MAILER=log`, so emails are written to `storage/logs/laravel.log` instead of being sent. After you request a reset, open that file and copy the `/reset-password/...` link.
+
+### Note for WAMP and other MyISAM servers
+
+Some local MySQL installs (WAMP, for example) use MyISAM as the default storage engine. This project forces InnoDB in `config/database.php`, so migrations work on those servers without changing `my.ini`.
+
+## Create a user
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php artisan user:create
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+The command asks for a name, an email and a password (the password is hidden as you type). It rejects an invalid or already-used email and a password that does not meet the password rules.
 
-## Contributing
+## Password rules
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Passwords must have at least 8 characters, upper and lower case letters, a number and a symbol. In production they are also checked against known data breaches. The rules are set once in `app/Providers/AppServiceProvider.php` with `Password::defaults()`.
 
-## Code of Conduct
+## Run the tests
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan test
+```
 
-## Security Vulnerabilities
+## Routes
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Method | URI | Name | Middleware |
+| --- | --- | --- | --- |
+| GET | `/` | – | web (redirects to login or dashboard) |
+| GET | `/login` | `login` | guest |
+| POST | `/login` | – | guest, 5 failed attempts per email + IP |
+| POST | `/logout` | `logout` | auth, auth.session |
+| GET | `/forgot-password` | `password.request` | guest |
+| POST | `/forgot-password` | `password.email` | guest, throttle:6,1 |
+| GET | `/reset-password/{token}` | `password.reset` | guest |
+| POST | `/reset-password` | `password.store` | guest, throttle:6,1 |
+| GET | `/settings/password` | `password.edit` | auth, auth.session |
+| PUT | `/settings/password` | `password.update` | auth, auth.session, throttle:6,1 |
+| GET | `/dashboard` | `dashboard` | auth, auth.session |
 
-## License
+## Production checklist
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- [ ] `APP_ENV=production`, `APP_DEBUG=false`, and the correct `APP_URL` with `https://`. Password reset links are built from `APP_URL`.
+- [ ] Real MySQL credentials for a database user that has only the privileges the app needs on its own database (not `root`).
+- [ ] Real `MAIL_*` settings (SMTP or a mail service), and a test password reset email sent and received.
+- [ ] `SESSION_SECURE_COOKIE=true` when the site is served over https.
+- [ ] `php artisan migrate --force`
+- [ ] `npm run build`
+- [ ] `php artisan optimize` (caches config, routes and views). Run it again after every deploy.
+- [ ] `storage/` and `bootstrap/cache/` are writable by the web server user.
+- [ ] Do **not** run the test-user seeder in production. Create real users with `php artisan user:create`.

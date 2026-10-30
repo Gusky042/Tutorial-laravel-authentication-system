@@ -58,6 +58,22 @@ class PasswordResetTest extends TestCase
         Notification::assertNothingSent();
     }
 
+    public function test_throttled_request_gets_same_neutral_message(): void
+    {
+        Notification::fake();
+
+        $user = User::factory()->create();
+
+        // The broker allows one link per user every 60 seconds; the second request is throttled.
+        $this->post(route('password.email'), ['email' => $user->email]);
+        $response = $this->post(route('password.email'), ['email' => $user->email]);
+
+        $response->assertSessionHas('status', PasswordResetLinkController::NEUTRAL_STATUS);
+        $response->assertSessionHasNoErrors();
+
+        Notification::assertSentToTimes($user, ResetPassword::class, 1);
+    }
+
     public function test_reset_password_page_renders_with_valid_token(): void
     {
         $user = User::factory()->create();

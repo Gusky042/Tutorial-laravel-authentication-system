@@ -32,13 +32,10 @@ class PasswordResetLinkController extends Controller
             'email' => ['required', 'email'],
         ]);
 
-        $status = Password::sendResetLink($request->only('email'));
-
-        if ($status === Password::RESET_THROTTLED) {
-            return back()
-                ->withInput($request->only('email'))
-                ->withErrors(['email' => __($status)]);
-        }
+        // The result is deliberately ignored. The broker only reports RESET_THROTTLED
+        // for emails that belong to a user, so showing it would reveal which emails
+        // are registered. Flooding is stopped by the route's throttle:6,1 middleware.
+        Password::sendResetLink($request->only('email'));
 
         return back()->with('status', self::NEUTRAL_STATUS);
     }
