@@ -34,7 +34,15 @@ class RegistrationTest extends TestCase
 
         $response->assertOk();
         $response->assertViewIs('auth.register');
-        $response->assertSee('Create account');
+
+        // "Register" submit button and a "Login" button that goes to the login page.
+        $response->assertSeeInOrder(['type="submit"', 'Register'], false);
+        $response->assertSeeInOrder(['href="'.route('login').'"', 'Login'], false);
+
+        // Live password match indicator.
+        $response->assertSee('data-password-match', false);
+        $response->assertSee('Passwords match');
+        $response->assertSee('Passwords do not match');
     }
 
     public function test_logged_in_user_visiting_register_is_redirected_to_dashboard(): void
