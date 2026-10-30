@@ -43,6 +43,10 @@ class RegistrationTest extends TestCase
         $response->assertSee('data-password-match', false);
         $response->assertSee('Passwords match');
         $response->assertSee('Passwords do not match');
+
+        // Show/Hide buttons for both password fields.
+        $response->assertSee('data-toggle-password="password"', false);
+        $response->assertSee('data-toggle-password="password_confirmation"', false);
     }
 
     public function test_logged_in_user_visiting_register_is_redirected_to_dashboard(): void
