@@ -31,8 +31,7 @@
                 Remember me
             </label>
 
-            {{-- Phase 4: point this at route('password.request') --}}
-            <a href="#" class="text-sm text-gray-600 underline hover:text-gray-900">
+            <a href="{{ route('password.request') }}" class="text-sm text-gray-600 underline hover:text-gray-900">
                 Forgot your password?
             </a>
         </div>
