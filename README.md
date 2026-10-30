@@ -90,6 +90,26 @@ The command asks for a name, an email and a password (the password is hidden as 
 
 Passwords must have at least 8 characters, upper and lower case letters, a number and a symbol. In production they are also checked against known data breaches. The rules are set once in `app/Providers/AppServiceProvider.php` with `Password::defaults()`.
 
+## Using Bootstrap on new pages
+
+The existing pages use Tailwind CSS. Bootstrap 5 is also installed (npm package `bootstrap`) for new pages, and it is loaded only on pages that opt in, so the two never clash.
+
+To build a page with Bootstrap, extend the Bootstrap layout:
+
+```blade
+@extends('layouts.bootstrap')
+
+@section('title', 'My page')
+
+@section('content')
+    <button class="btn btn-primary">Hello</button>
+@endsection
+```
+
+- `resources/views/layouts/bootstrap.blade.php` loads only Bootstrap (no Tailwind) and shows `session('status')` / `session('error')` as Bootstrap alerts.
+- `resources/js/bootstrap-ui.js` imports Bootstrap's CSS and JavaScript bundle (which includes Popper for dropdowns and tooltips). It is exposed as `window.bootstrap`.
+- Run `npm run build` (or `npm run dev`) after adding pages.
+
 ## Run the tests
 
 ```bash
