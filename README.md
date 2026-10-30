@@ -1,8 +1,8 @@
 # Laravel Auth App
 
-A small Laravel 13 application with hand-written authentication: log in, log out, forgot password (email reset link), reset password, change password, and a protected dashboard.
+A small Laravel 13 application with hand-written authentication: sign up, log in, log out, forgot password (email reset link), reset password, change password, and a protected dashboard.
 
-There is **no public registration**. Users are created by an administrator with `php artisan user:create`.
+New users can create their own account at `/register`. Administrators can still add users from the command line with `php artisan user:create`.
 
 Built with Blade, Tailwind CSS (through Vite) and MySQL. No starter kit (Breeze, Jetstream or Fortify) is used, so every controller, request and view is in this repository.
 
@@ -76,6 +76,10 @@ Some local MySQL installs (WAMP, for example) use MyISAM as the default storage 
 
 ## Create a user
 
+**Sign up in the browser:** open <http://localhost:8000/register> (or click "Create an account" on the login page). After signing up you are logged in and taken to the dashboard. Emails are stored in lowercase and must be unique.
+
+**As an administrator:** create an account from the command line.
+
 ```bash
 php artisan user:create
 ```
@@ -99,6 +103,8 @@ php artisan test
 | GET | `/` | – | web (redirects to login or dashboard) |
 | GET | `/login` | `login` | guest |
 | POST | `/login` | – | guest, 5 failed attempts per email + IP |
+| GET | `/register` | `register` | guest |
+| POST | `/register` | `register.store` | guest, throttle:6,1 |
 | POST | `/logout` | `logout` | auth, auth.session |
 | GET | `/forgot-password` | `password.request` | guest |
 | POST | `/forgot-password` | `password.email` | guest, throttle:6,1 |

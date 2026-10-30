@@ -41,4 +41,9 @@
             Log in
         </button>
     </form>
+
+    <p class="mt-6 text-center text-sm text-gray-600">
+        New here?
+        <a href="{{ route('register') }}" class="underline hover:text-gray-900">Create an account</a>
+    </p>
 @endsection
