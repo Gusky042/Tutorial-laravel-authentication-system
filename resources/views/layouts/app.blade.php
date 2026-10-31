@@ -6,14 +6,12 @@
 
     <title>@hasSection('title')@yield('title') - @endif{{ config('app.name') }}</title>
 
+    <x-favicons />
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="group/body min-h-screen bg-[#f4f5f7] font-sans text-gray-900 antialiased" data-sidebar="closed">
     @php
-        $appName = config('app.name');
-        $brandStart = \Illuminate\Support\Str::beforeLast($appName, ' ');
-        $brandEnd = \Illuminate\Support\Str::afterLast($appName, ' ');
         $navItem = 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium';
     @endphp
 
@@ -22,12 +20,8 @@
 
     <aside id="sidebar"
            class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col overflow-y-auto bg-[#f4f5f7] px-4 pb-6 transition-transform group-data-[sidebar=open]/body:translate-x-0 lg:translate-x-0 print:hidden">
-        <a href="{{ route('dashboard') }}" class="flex h-20 shrink-0 items-center px-3 text-2xl font-bold tracking-tight">
-            @if ($brandStart !== $brandEnd)
-                {{ $brandStart }}&nbsp;<span class="text-[#1f3bb3]">{{ $brandEnd }}</span>
-            @else
-                {{ $appName }}
-            @endif
+        <a href="{{ route('dashboard') }}" class="flex h-24 shrink-0 items-center rounded-lg px-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400">
+            <x-logo tagline gap="#f4f5f7" />
         </a>
 
         <nav aria-label="Main" class="mt-2 flex-1 space-y-6">

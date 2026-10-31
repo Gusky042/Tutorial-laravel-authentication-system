@@ -10,6 +10,7 @@
 
     <title>@hasSection('title')@yield('title') - @endif{{ config('app.name') }}</title>
 
+    <x-favicons />
     @vite(['resources/js/bootstrap-ui.js'])
 </head>
 <body class="bg-light">

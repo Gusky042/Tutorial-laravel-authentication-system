@@ -10,6 +10,9 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/bootstrap-ui.js'],
             refresh: true,
             fonts: [
+                bunny('Manrope', {
+                    weights: [800],
+                }),
                 bunny('Instrument Sans', {
                     weights: [300, 400, 500, 600, 700],
                 }),
