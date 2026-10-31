@@ -59,9 +59,102 @@ function initPasswordToggles() {
     });
 }
 
+// Hover/focus tooltips for dashboard charts. Each [data-chart] holds one
+// [data-chart-tooltip] and any number of targets with data-tip='{"title", "rows"}'.
+// Text is set with textContent, so the data can never inject HTML.
+function initChartTooltips() {
+    document.querySelectorAll('[data-chart]').forEach((chart) => {
+        const tooltip = chart.querySelector('[data-chart-tooltip]');
+
+        if (!tooltip) {
+            return;
+        }
+
+        const show = (target) => {
+            let tip;
+
+            try {
+                tip = JSON.parse(target.dataset.tip);
+            } catch {
+                return;
+            }
+
+            const title = document.createElement('p');
+            title.className = 'mb-1 font-semibold text-gray-900';
+            title.textContent = tip.title;
+
+            const rows = (tip.rows || []).map((row) => {
+                const line = document.createElement('p');
+                line.className = 'flex items-center justify-between gap-4 text-gray-600';
+
+                const label = document.createElement('span');
+                label.className = 'flex items-center gap-1.5';
+
+                if (row.color) {
+                    const key = document.createElement('span');
+                    key.className = 'inline-block size-2 rounded-full';
+                    key.style.backgroundColor = row.color;
+                    label.append(key);
+                }
+
+                label.append(row.label);
+
+                const value = document.createElement('span');
+                value.className = 'font-medium tabular-nums text-gray-900';
+                value.textContent = row.value;
+
+                line.append(label, value);
+
+                return line;
+            });
+
+            tooltip.replaceChildren(title, ...rows);
+            tooltip.hidden = false;
+
+            const box = chart.getBoundingClientRect();
+            const rect = target.getBoundingClientRect();
+            const centre = rect.left - box.left + rect.width / 2;
+            const width = tooltip.offsetWidth;
+            let left;
+            let top;
+
+            if (rect.height > 120) {
+                // Tall targets (line chart bands): sit beside the crosshair, flipping left near the edge.
+                left = centre + 12 + width <= box.width ? centre + 12 : centre - 12 - width;
+                top = rect.top - box.top;
+            } else {
+                // Short targets (bars, columns): centre above.
+                left = centre - width / 2;
+                top = rect.top - box.top - tooltip.offsetHeight - 8;
+            }
+
+            tooltip.style.left = `${Math.min(Math.max(left, 0), box.width - width)}px`;
+            tooltip.style.top = `${Math.max(top, 0)}px`;
+        };
+
+        const hide = () => {
+            tooltip.hidden = true;
+        };
+
+        chart.querySelectorAll('[data-tip]').forEach((target) => {
+            target.addEventListener('mouseenter', () => show(target));
+            target.addEventListener('focus', () => show(target));
+            target.addEventListener('mouseleave', hide);
+            target.addEventListener('blur', hide);
+        });
+
+        chart.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                hide();
+            }
+        });
+    });
+}
+
 function init() {
     initPasswordMatch();
     initPasswordToggles();
+    initChartTooltips();
 }
 
 if (document.readyState === 'loading') {

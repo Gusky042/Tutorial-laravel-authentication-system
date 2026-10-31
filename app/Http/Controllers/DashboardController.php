@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\ErpDemoData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
@@ -11,7 +12,7 @@ class DashboardController extends Controller
     /**
      * Show the dashboard for the logged-in user.
      */
-    public function __invoke(Request $request): View
+    public function __invoke(Request $request, ErpDemoData $erp): View
     {
         $user = $request->user();
 
@@ -25,6 +26,7 @@ class DashboardController extends Controller
         return view('dashboard', [
             'user' => $user,
             'previousLoginAt' => $previousLoginAt ? Carbon::parse($previousLoginAt) : null,
+            'erp' => $erp->all(),
         ]);
     }
 }

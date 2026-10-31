@@ -33,6 +33,31 @@ class DashboardTest extends TestCase
         $response->assertSee('ada@example.com');
     }
 
+    public function test_dashboard_shows_erp_demo_figures_and_charts(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertSee('Demo data');
+        $response->assertSeeInOrder([
+            'Revenue this month', '$1.28M',
+            'Gross margin', '38.6%',
+            'Open sales orders', '342',
+            'Accounts receivable', '$865K',
+        ]);
+        $response->assertSee('Revenue and expenses');
+        $response->assertSee('Open orders by stage');
+        $response->assertSee('Revenue by region');
+        $response->assertSee('Receivables aging');
+        $response->assertSee('Low stock');
+        $response->assertSee('Recent sales orders');
+        $response->assertSee('SO-10482');
+        $response->assertSee('View as table');
+        $response->assertSee('data-chart-tooltip', false);
+    }
+
     public function test_logging_in_updates_last_login_at(): void
     {
         $previous = now()->subDays(2)->startOfSecond();

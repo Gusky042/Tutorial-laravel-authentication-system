@@ -11,7 +11,7 @@
 </head>
 <body class="min-h-screen bg-gray-50 font-sans text-gray-900 antialiased">
     <header class="border-b border-gray-200 bg-white">
-        <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-3">
+        <div class="mx-auto flex @yield('width', 'max-w-5xl') flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-3">
             <a href="{{ url('/') }}" class="text-lg font-semibold tracking-tight text-gray-900">
                 {{ config('app.name') }}
             </a>
@@ -41,7 +41,7 @@
         </div>
     </header>
 
-    <main class="mx-auto max-w-5xl px-4 py-8">
+    <main class="mx-auto @yield('width', 'max-w-5xl') px-4 py-8">
         <x-flash />
 
         @yield('content')
