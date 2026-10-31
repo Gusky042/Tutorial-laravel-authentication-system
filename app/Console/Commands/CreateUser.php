@@ -19,7 +19,7 @@ class CreateUser extends Command
     /**
      * @var string
      */
-    protected $description = 'Create a new user (there is no public registration)';
+    protected $description = 'Create a new user from the command line';
 
     public function handle(): int
     {
