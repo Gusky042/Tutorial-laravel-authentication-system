@@ -45,17 +45,43 @@ class DashboardTest extends TestCase
             'Revenue this month', '$1.28M',
             'Gross margin', '38.6%',
             'Open sales orders', '342',
+            'Inventory value', '$4.2M',
             'Accounts receivable', '$865K',
+            'Operating expenses', '$789K',
         ]);
-        $response->assertSee('Revenue and expenses');
-        $response->assertSee('Open orders by stage');
-        $response->assertSee('Revenue by region');
+        $response->assertSee('Order performance');
+        $response->assertSee('Revenue overview');
+        $response->assertSee('$13,259,000');
+        $response->assertSee('Open purchase orders');
+        $response->assertSee('PO-2291');
+        $response->assertSee('Status summary');
+        $response->assertSee('Service levels');
+        $response->assertSee('Expenses by category');
         $response->assertSee('Receivables aging');
-        $response->assertSee('Low stock');
-        $response->assertSee('Recent sales orders');
-        $response->assertSee('SO-10482');
-        $response->assertSee('View as table');
+        $response->assertSee('Upcoming deadlines');
+        $response->assertSee('Top performers');
+        $response->assertSee('role="tablist"', false);
         $response->assertSee('data-chart-tooltip', false);
+        $response->assertSee('id="dashboard-export"', false);
+    }
+
+    public function test_change_password_page_uses_the_sidebar_layout(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->get(route('password.edit'))
+            ->assertOk()
+            ->assertSee('aria-label="Main"', false)
+            ->assertSee('aria-current="page"', false);
+    }
+
+    public function test_smooth_path_passes_through_every_point(): void
+    {
+        $path = \App\Support\ErpDemoData::smoothPath([[0, 50], [50, 10], [100, 90]]);
+
+        $this->assertStringStartsWith('M0.00,50.00', $path);
+        $this->assertStringContainsString('50.00,10.00', $path);
+        $this->assertStringEndsWith('100.00,90.00', $path);
     }
 
     public function test_logging_in_updates_last_login_at(): void
